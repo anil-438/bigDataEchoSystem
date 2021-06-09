@@ -1,11 +1,21 @@
 import java.io.File
 
+
+import org.apache.spark.sql.types._
+import org.apache.spark.sql.functions._
 import org.apache.hadoop.fs._
+import  org.apache.spark.sql.SparkSession
 
 object hdfs_config {
-  val spark = source.spark
+  val spark = SparkSession
+    .builder()
+    .appName("Spark Hive Example2")
+    .master("local")
+    .enableHiveSupport()
+    .getOrCreate()
+
   import spark.implicits._
-  val hc = source.sc.hadoopConfiguration
+  val hc =  spark.sparkContext.hadoopConfiguration
   val fs = FileSystem.get(hc)
    def listStatus: Unit ={
 

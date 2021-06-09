@@ -1,7 +1,11 @@
 package spark.dataFrame
 
 import org.apache.spark.SparkContext
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{Row, SaveMode, SparkSession}
+import org.apache.spark.sql.types._
+import org.apache.spark.sql.functions._
+import org.apache.hadoop.fs._
+
 
 //Text data source does not support array<int> data type
 //json write not support snappy compression
@@ -33,14 +37,14 @@ object read_and_write_hdfs {
     val txt_RDD=txt_file.map(_.split(",")).map(col => Row(col(0),col(1)))
     spark.createDataFrame(txt_RDD,Schema.structType ).show(false)
     // Method 02 --> case class with toDF
-    val txt_RDD_02=txt_file.map(_.split(",")).map(col => Schema.Person(col(0),col(1).trim.toInt)).toDF() //.trim.toInt --> Madatory for integer columns
+   // val txt_RDD_02=txt_file.map(_.split(",")).map(col => Schema.Person(col(0),col(1).trim.toInt)).toDF() //.trim.toInt --> Madatory for integer columns
     //Method 03 --> seq with toDF
     spark.read.option("delimiter", ",").csv("C:\\Users\\me\\IdeaProjects\\bigData\\src\\main\\resources\\people.txt").toDF(Schema.seq:_*).show(false)
     //Method 04 --> hard Coded with toDF
     spark.read.option("delimiter", ",").csv("C:\\Users\\me\\IdeaProjects\\bigData\\src\\main\\resources\\people.txt").toDF("name","age").show(false)
     //Method 05 --> schema with struct type
     spark.read.option("delimiter", ",").schema(Schema.structType.add("_corrupt_record",StringType,true)).csv("C:\\Users\\me\\IdeaProjects\\bigData\\src\\main\\resources\\people.txt").show(false)
-    txt_RDD_02.show(false)
+
   }
   def parquet(spark:SparkSession): Unit ={
 val parquet = spark.read

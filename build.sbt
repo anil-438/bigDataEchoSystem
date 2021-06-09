@@ -9,8 +9,36 @@ lazy val globle = project
     `spark-rdd`,
     `spark-df-ds`,
     `HBase`,
-    `sparkSql`
+    `sparkSql`,
+    `hdfs`
   )
+
+
+lazy val `hdfs` = project
+  .settings(
+    name := "hdfs",
+    settings,
+    assemblySettingsSpark,
+    libraryDependencies ++= commonDependencies ++ Seq(
+      dependency.spark_sql,
+      dependency.spark_core,
+      dependency.excel,
+      dependency.excel_poi,
+      dependency.hive_sql,
+      dependency.jsonPath,
+      dependency.kafka,
+      // dependency.oracleJDBC,
+      dependency.pgpPG,
+      //  dependency.pgpProvider,
+      dependency.postgresJDBC,
+      dependency.spark_avro,
+      dependency.spark_stream,
+      // dependency.sqlDBConnecter,
+      dependency.sqlserverJDBC,
+      dependency.slf4j
+    )
+  ) .dependsOn(`spark-rdd`)
+
 
 lazy val `scala-program-lang` = project
   .settings(
